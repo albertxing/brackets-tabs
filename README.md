@@ -15,3 +15,8 @@ Usage
 Show/hide sidebar `View > Show/Hide Sidebar (Ctrl-Shift-H)` toggles sidebar & tabs.  
 Switch tabs by clicking.  
 Reorder by dragging.
+
+Contributing
+---
+Feel free to submit a pull request if you find any bugs (to see a list of active issues, visit the [Issues section](https://github.com/albertxing/brackets-tabs/issues)).
+Please make sure all commits are properly documented.
