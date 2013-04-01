@@ -1,0 +1,49 @@
+.main-view > #open-files-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+.main-view > #open-files-container ul {
+    visibility: visible;
+    position: fixed !important;
+    top: 0 !important;
+    width: 100%;
+    z-index: 17;
+    background: #404040;
+    height: 31px;
+    box-shadow: 0 -2px 1px #333 inset;
+    border-bottom: 5px solid #606060;
+}
+.main-view > #open-files-container li {
+    display: inline-block;
+    padding: 0;
+    background: transparent;
+    box-shadow: 0 -2px 1px #333 inset;
+}
+.main-view > #open-files-container li.selected {
+    background: #606060;
+    box-shadow: 0 -3px 1px 2px #333;
+    z-index: 2;
+}
+.main-view > #open-files-container a {
+    line-height: 31px;
+    height: 31px;
+    margin: 0;
+    padding: 0 30px;
+}
+.main-view > #open-files-container .can-close,.main-view > #open-files-container .dirty {
+    margin-top: 8px;
+    margin-left: 8px;
+}
+#main-toolbar.tabs {
+    visibility: hidden;
+    border-bottom: none;
+    margin-bottom: 0;
+}
+#main-toolbar.tabs > * {
+    visibility: visible;
+}
+#main-toolbar.tabs > .title-wrapper {
+    visibility: hidden;
+}
