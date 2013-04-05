@@ -70,6 +70,6 @@
 #main-toolbar.tabs > * {
     visibility: visible;
 }
-#main-toolbar.tabs > .title-wrapper, #main-toolbar.tabs > .title-wrapper > * {
-    visibility: hidden;
+#main-toolbar.tabs > .title-wrapper, #main-toolbar.tabs > .title-wrapper > span {
+    visibility: hidden !important;
 }

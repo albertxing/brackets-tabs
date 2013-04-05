@@ -1,6 +1,6 @@
 Tabs for Brackets
 =============
-![Screenshot of the tabs](http://commondatastorage.googleapis.com/htmlvb/Shot.PNG)
+![Screenshot of the tabs](http://commondatastorage.googleapis.com/htmlvb/2.PNG)
 
 Installation
 ---
