@@ -19,7 +19,7 @@
 .main-view > #open-files-container li {
     display: inline-block;
     padding: 0;
-    background: #404040;
+    background: transparent;
     box-shadow: 0 -2px 1px #333 inset, 1px 0 1px #444 inset;
     overflow: hidden;
     height: 31px;
@@ -47,6 +47,9 @@
 	background: -webkit-linear-gradient(left, rgba(96,96,96,0), rgba(96,96,96,100));
 	margin-left: -10px;
 	z-index: 30;
+}
+.main-view > #open-files-container li:active:after {
+	display: none;
 }
 .main-view > #open-files-container a {
     line-height: 31px;
