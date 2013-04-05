@@ -8,23 +8,45 @@
     visibility: visible;
     position: fixed !important;
     top: 0 !important;
-    width: 100%;
+    min-width: 100%;
     z-index: 17;
     background: #404040;
     height: 31px;
     box-shadow: 0 -2px 1px #333 inset;
     border-bottom: 5px solid #606060;
+    white-space: nowrap;
 }
 .main-view > #open-files-container li {
     display: inline-block;
     padding: 0;
-    background: transparent;
-    box-shadow: 0 -2px 1px #333 inset;
+    background: #404040;
+    box-shadow: 0 -2px 1px #333 inset, 1px 0 1px #444 inset;
+    overflow: hidden;
+    height: 31px;
+}
+.main-view > #open-files-container li:after {
+	width: 10px;
+	left: 100%;
+	margin-left: -10px;
+	position: relative;
+	background: -webkit-linear-gradient(left, rgba(64,64,64,0), rgba(58,58,58,100));
+	top: -31px;
+	height: 30px;
+	display: block;
+	content: '';
+}
+.main-view > #open-files-container li:last-child:after {
+	background: -webkit-linear-gradient(left, rgba(64,64,64,0), rgba(64,64,64,100));
 }
 .main-view > #open-files-container li.selected {
     background: #606060;
     box-shadow: 0 -3px 1px 2px #333;
     z-index: 2;
+}
+.main-view > #open-files-container li.selected:after {
+	background: -webkit-linear-gradient(left, rgba(96,96,96,0), rgba(96,96,96,100));
+	margin-left: -10px;
+	z-index: 30;
 }
 .main-view > #open-files-container a {
     line-height: 31px;
@@ -40,10 +62,11 @@
     visibility: hidden;
     border-bottom: none;
     margin-bottom: 0;
+    height: 28px;
 }
 #main-toolbar.tabs > * {
     visibility: visible;
 }
-#main-toolbar.tabs > .title-wrapper {
+#main-toolbar.tabs > .title-wrapper, #main-toolbar.tabs > .title-wrapper > * {
     visibility: hidden;
 }

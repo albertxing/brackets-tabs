@@ -1,16 +1,16 @@
 /*
  * Copyright (c) 2013 Albert Xing.
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
  * to deal in the Software without restriction, including without limitation
  * the rights to use, copy, modify, merge, publish, distribute, sublicense,
  * and/or sell copies of the Software, and to permit persons to whom the
  * Software is furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -36,21 +36,35 @@ var KeyBindingManager   = brackets.getModule("command/KeyBindingManager"),
 	Strings             = brackets.getModule("strings");
 
 define(function (require, exports, module) {
-
+	
 	"use strict";
-
+	
 	var _FILE_KEY = 'file',
 		$openFilesContainer = $('#open-files-container'),
 		$openFilesList = $('#open-files-container').find('ul'),
 		tabsVisible;
-
+	
 	var link = require.toUrl('./style.css');
 	var style = document.createElement('link');
 	style.type = 'text/css';
 	style.rel = 'stylesheet';
 	style.href = link;
 	document.querySelector('head').appendChild(style);
-
+	
+	/**
+	 * Resizes tabs if not enough room
+	 */
+	function squeeze() {
+		if ($openFilesList.find('li').length * 100 > $openFilesContainer.width() || $openFilesList.width() > $openFilesContainer.width()) {
+			$openFilesList.find('li').css('width', ($openFilesContainer.width() - 50) / $openFilesList.find('li').length);
+		} else {
+			$openFilesList.find('li').css('width', 'auto');
+			if ($openFilesList.width() > $openFilesContainer.width()) {
+				squeeze();
+			}
+		}
+	}
+	
 	/**
 	 * Show tabs & hide sidebar
 	 */
@@ -61,9 +75,12 @@ define(function (require, exports, module) {
 		$('.sidebar-selection-triangle').hide();
 		// Add class .tabs to toolbar - activates styles
 		$('#main-toolbar').addClass('tabs');
+		// Make sure the tabs fit inside the window
+		$('#open-files-container').find('ul').bind('DOMSubtreeModified', squeeze);
+		$(window).bind('resize', squeeze);
 		tabsVisible = true;
 	}
-
+	
 	/**
 	 * Hide tabs & show sidebar
 	 */
@@ -74,11 +91,14 @@ define(function (require, exports, module) {
 		$('.sidebar-selection-triangle').css('display', 'block');
 		// Remove tabs styling of toolbar
 		$('#main-toolbar').removeClass('tabs');
+		// Remove squeeze event bindings
+		$('#open-files-container').find('ul').unbind('DOMSubtreeModified');
+		$(window).unbind('resize', squeeze);
 		// Initiate editor resize for consistency
 		EditorManager.resizeEditor();
 		tabsVisible = false;
 	}
-
+	
 	/**
 	 * Determine whether to hide tabs or show tabs on load
 	 */
@@ -89,7 +109,7 @@ define(function (require, exports, module) {
 			showTabs();
 		}
 	}
-
+	
 	/**
 	 * Toggle sidebar & tabs
 	 * @param  {Number} width Width of sidebar (placeholder)
@@ -98,7 +118,7 @@ define(function (require, exports, module) {
 		Resizer.toggle($("#sidebar"));
 		toggleTabs();
 	}
-
+	
 	/**
 	 * @private
 	 * Redraw selection when list size changes or DocumentManager currentDocument changes.
@@ -106,11 +126,11 @@ define(function (require, exports, module) {
 	function _fireSelectionChanged() {
 		// redraw selection
 		$openFilesList.trigger("selectionChanged");
-
+		
 		// in-lieu of resize events, manually trigger contentChanged to update scroll shadows
 		$openFilesContainer.triggerHandler("contentChanged");
 	}
-
+	
 	/**
 	 * Starts the drag and drop working set view reorder.
 	 * @private
@@ -119,7 +139,7 @@ define(function (require, exports, module) {
 	 * @param {?bool} fromClose - true if reorder was called from the close icon
 	 */
 	function _reorderListItem(event, $listItem, fromClose) {
-
+		
 		var $dataListItem   = $('.main-view').find('#open-files-container li'),
 			$prevListItem   = $listItem.prev(),
 			$nextListItem   = $listItem.next(),
@@ -140,7 +160,7 @@ define(function (require, exports, module) {
 			addBottomShadow = false,
 			interval        = false,
 			moved           = false;
-
+		
 		// Sidebar - needs vertical properties
 		if (!tabsVisible) {
 			width           = $listItem.height();
@@ -153,10 +173,10 @@ define(function (require, exports, module) {
 			hasScroll       = scrollElement.scrollHeight > containerWidth;
 			hasBottomShadow = scrollElement.scrollHeight > scrollElement.scrollTop + containerWidth;
 		}
-
+		
 		function drag(e) {
 			var left = ((tabsVisible) ? e.pageX : e.pageY) - startPageX;
-
+			
 			// Drag if the item is not the first and moving it up or
 			// if the item is not the last and moving down
 			if (($prevListItem.length && left < 0) || ($nextListItem.length && left > 0)) {
@@ -175,18 +195,18 @@ define(function (require, exports, module) {
 						left = left - width;
 						DocumentManager.swapWorkingSetIndexes(index, ++index);
 					}
-
+					
 					// Update the selection when the previows or next element were selected
 					if (!selected && ((left > 0 && prevSelected) || (left < 0 && nextSelected))) {
 						_fireSelectionChanged();
 					}
-
+					
 					// Update the previows and next items
 					$prevListItem = $listItem.prev();
 					$nextListItem = $listItem.next();
 					prevSelected  = $prevListItem.hasClass("selected");
 					nextSelected  = $nextListItem.hasClass("selected");
-
+					
 					// If the last item of the list was selected and the previows was moved to its location, then
 					// the it will show a bottom shadow even if it shouldnt because of the way the scrollHeight is 
 					// handle with relative position. This will remove that shadow and add it on drop. 
@@ -200,31 +220,31 @@ define(function (require, exports, module) {
 			} else {
 				left = 0;
 			}
-
+			
 			// Move the item
 			if (tabsVisible) {
 				$listItem.css("left", left + "px").css("top", 0);
 			} else {
 				$listItem.css("top", left + "px").css("left", 0);
 			}
-
+			
 			// Update the selection position
 			if (selected) {
 				_fireSelectionChanged();
 			}
-
+			
 			// Once the movement is greater than 3 pixels, it is assumed that the user wantes to reorder files and not open
 			if (!moved && Math.abs(left) > 3) {
 				Menus.closeAll();
 				moved = true;
 			}
 		}
-
+		
 		function endScroll() {
 			window.clearInterval(interval);
 			interval = false;
 		}
-
+		
 		function scroll(e) {
 			var dir = 0;
 			// Mouse over the first visible pixels and moving up
@@ -234,7 +254,7 @@ define(function (require, exports, module) {
 			} else if (e.pageX + listItemBottom > offsetTop + containerWidth - 7) {
 				dir = 1;
 			}
-
+			
 			if (dir && !interval) {
 				// Scroll view if the mouse is over the first or last pixels of the container
 				interval = window.setInterval(function () {
@@ -253,19 +273,19 @@ define(function (require, exports, module) {
 				endScroll();
 			}
 		}
-
+		
 		function drop() {
 			// Enable Mousewheel
 			window.onmousewheel = window.document.onmousewheel = null;
-
+			
 			// Removes the styles, placing the item in the chosen place
 			$listItem.removeAttr("style");
-
+			
 			// End the scrolling if needed
 			if (interval) {
 				window.clearInterval(interval);
 			}
-
+			
 			// If file wasnt moved open or close it
 			if (!moved) {
 				if (!fromClose) {
@@ -278,7 +298,7 @@ define(function (require, exports, module) {
 					} else {
 						FileViewController.openAndSelectDocument($listItem.data(_FILE_KEY).fullPath, FileViewController.WORKING_SET_VIEW);
 					}
-				***/
+					***/
 				} else {
 					CommandManager.execute(Commands.FILE_CLOSE, {file: $dataListItem.data(_FILE_KEY)});
 				}
@@ -294,26 +314,26 @@ define(function (require, exports, module) {
 				}
 			}
 		}
-
-
+		
+		
 		// Only drag with the left mouse button, and control key is not down
 		// on Mac, end the drop in other cases
 		if (event.which !== 1 || (event.ctrlKey && brackets.platform === "mac")) {
 			drop();
 			return;
 		}
-
+		
 		// Disable Mousewheel while dragging
 		window.onmousewheel = window.document.onmousewheel = function (e) {
 			e.preventDefault();
 		};
-
+		
 		// Style the element
 		$listItem.css("position", "relative").css("z-index", 3);
 		if (!$listItem.hasClass('selected')) {
 			$listItem.css("box-shadow", "none");
 		}
-
+		
 		// Event Handlers
 		$openFilesContainer.on("mousemove.workingSet", function (e) {
 			if (hasScroll) {
@@ -326,20 +346,20 @@ define(function (require, exports, module) {
 			drop();
 		});
 	}
-
+	
 	$('#open-files-container').mousedown(function (e) {
 		// Get the index of list item selected
 		var place = $(e.target.parentElement).index();
 		_reorderListItem(e, $(this).find('ul > li:nth-child(' + (place + 1) + ')'), false);
 		e.preventDefault();
 	});
-
+	
 	// Register new functions as default; replace keybinding trigger functions
 	CommandManager.register(Strings.CMD_HIDE_SIDEBAR, "toggle-sidebar-tabs", toggleSidebar);
 	KeyBindingManager.removeBinding('Ctrl-Shift-H');
 	KeyBindingManager.addBinding('toggle-sidebar-tabs', 'Ctrl-Shift-H');
-
+	
 	// Initiate tabs
 	toggleTabs();
-
+	
 });
