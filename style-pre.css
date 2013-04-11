@@ -1,12 +1,8 @@
-.content.tabs {
-    right: 0;
-}
-.content > #open-files-container {
+.content #open-files-container {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 35px;
     margin-bottom: 0;
 }
 .content > #open-files-container ul {
@@ -66,18 +62,15 @@
     margin-top: 8px;
     margin-left: 8px;
 }
-.content.tabs + #main-toolbar {
+.content.tabs > #main-toolbar {
     visibility: hidden;
     border-bottom: none;
     margin-bottom: 0;
-    width: 0;
+    height: 28px;
 }
-.content.tabs + #main-toolbar > .buttons {
+.content.tabs > #main-toolbar > * {
     visibility: visible;
-    position: fixed;
-    width: auto;
-    height: 30px;
-    right: 10px;
-    top: 5px;
-    z-index: 99;
+}
+.content.tabs > #main-toolbar > .title-wrapper, .content.tabs > #main-toolbar > .title-wrapper > span {
+    visibility: hidden !important;
 }
