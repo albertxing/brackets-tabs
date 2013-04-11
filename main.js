@@ -39,26 +39,26 @@ define(function (require, exports, module) {
     
     "use strict";
     
-    var _FILE_KEY = 'file',
-        $openFilesContainer = $('#open-files-container'),
-        $openFilesList = $('#open-files-container').find('ul'),
+    var _FILE_KEY = "file",
+        $openFilesContainer = $("#open-files-container"),
+        $openFilesList = $("#open-files-container").find("ul"),
         tabsVisible;
     
-    var link = require.toUrl('./style' + (($('#main-toolbar').width() === 30) ? '' : '-pre') + '.css');
-    var style = document.createElement('link');
-    style.type = 'text/css';
-    style.rel = 'stylesheet';
+    var link = require.toUrl("./style" + (($("#main-toolbar").width() === 30) ? "" : "-pre") + ".css");
+    var style = document.createElement("link");
+    style.type = "text/css";
+    style.rel = "stylesheet";
     style.href = link;
-    document.querySelector('head').appendChild(style);
+    document.querySelector("head").appendChild(style);
     
     /**
 	 * Resizes tabs if not enough room
 	 */
     function squeeze() {
-        if ($openFilesList.find('li').length * 100 > $openFilesContainer.width() || $openFilesList.width() > $openFilesContainer.width()) {
-            $openFilesList.find('li').css('width', ($openFilesContainer.width() - $('.buttons').width() - 20) / $openFilesList.find('li').length);
+        if ($openFilesList.find("li").length * 100 > $openFilesContainer.width() || $openFilesList.width() > $openFilesContainer.width()) {
+            $openFilesList.find("li").css("width", ($openFilesContainer.width() - $(".buttons").width() - 20) / $openFilesList.find("li").length);
         } else {
-            $openFilesList.find('li').css('width', 'auto');
+            $openFilesList.find("li").css("width", "auto");
             if ($openFilesList.width() > $openFilesContainer.width()) {
                 squeeze();
             }
@@ -70,14 +70,14 @@ define(function (require, exports, module) {
 	 */
     function showTabs() {
         // Move the open file container to the main parent
-        $('#open-files-container').insertBefore('#editor-holder');
+        $("#open-files-container").insertBefore("#editor-holder");
         // Hide the open file pointer triangle
-        $('.sidebar-selection-triangle').hide();
+        $(".sidebar-selection-triangle").hide();
         // Add class .tabs to toolbar - activates styles
-        $('.content').addClass('tabs');
+        $(".content").addClass("tabs");
         // Make sure the tabs fit inside the window
-        $('#open-files-container').find('ul').bind('DOMSubtreeModified', squeeze);
-        $(window).bind('resize', squeeze);
+        $("#open-files-container").find("ul").bind("DOMSubtreeModified", squeeze);
+        $(window).bind("resize", squeeze);
         tabsVisible = true;
     }
     
@@ -86,14 +86,14 @@ define(function (require, exports, module) {
 	 */
     function hideTabs() {
         // Move back into sidebar
-        $('#open-files-container').prependTo('#file-section');
+        $("#open-files-container").prependTo("#file-section");
         // Show selection triangle
-        $('.sidebar-selection-triangle').css('display', 'block').css('top', $('.sidebar-selection').offset().top);
+        $(".sidebar-selection-triangle").css("display", "block").css("top", $(".sidebar-selection").offset().top);
         // Remove tabs styling of toolbar
-        $('.content').removeClass('tabs');
+        $(".content").removeClass("tabs");
         // Remove squeeze event bindings
-        $('#open-files-container').find('ul').unbind('DOMSubtreeModified');
-        $(window).unbind('resize', squeeze);
+        $("#open-files-container").find("ul").unbind("DOMSubtreeModified");
+        $(window).unbind("resize", squeeze);
         // Focus current file again to reset selection metrics
         FileViewController.openAndSelectDocument(DocumentManager.getCurrentDocument().file.fullPath, FileViewController.getFileSelectionFocus());
         // Initiate editor resize for consistency
@@ -142,13 +142,13 @@ define(function (require, exports, module) {
 	 */
     function _reorderListItem(event, $listItem, fromClose) {
         
-        var $dataListItem   = $('.main-view').find('#open-files-container li'),
+        var $dataListItem   = $(".main-view").find("#open-files-container li"),
             $prevListItem   = $listItem.prev(),
             $nextListItem   = $listItem.next(),
             selected        = $listItem.hasClass("selected"),
             prevSelected    = $prevListItem.hasClass("selected"),
             nextSelected    = $nextListItem.hasClass("selected"),
-            index           = DocumentManager.findInWorkingSet($listItem.data('file').fullPath),
+            index           = DocumentManager.findInWorkingSet($listItem.data("file").fullPath),
             width           = $listItem.width(),
             startPageX      = event.pageX,
             listItemTop     = startPageX - $listItem.offset().left,
@@ -261,7 +261,7 @@ define(function (require, exports, module) {
                 // Scroll view if the mouse is over the first or last pixels of the container
                 interval = window.setInterval(function () {
                     var scrollTop = $openFilesContainer.scrollTop();
-                    // End scroll if there isn't more to scroll
+                    // End scroll if there isn"t more to scroll
                     if ((dir === -1 && scrollTop <= 0) || (dir === 1 && scrollTop >= maxScroll)) {
                         endScroll();
                         // Scroll and drag list item
@@ -292,7 +292,7 @@ define(function (require, exports, module) {
             if (!moved) {
                 if (!fromClose) {
                     /***/
-                    FileViewController.openAndSelectDocument($listItem.data('file').fullPath, FileViewController.WORKING_SET_VIEW);
+                    FileViewController.openAndSelectDocument($listItem.data("file").fullPath, FileViewController.WORKING_SET_VIEW);
                     /***
 					// Backing out for Sprint 18 due to issues described in #2394, #2411
 					if (selected) {
@@ -317,7 +317,6 @@ define(function (require, exports, module) {
             }
         }
         
-        
         // Only drag with the left mouse button, and control key is not down
         // on Mac, end the drop in other cases
         if (event.which !== 1 || (event.ctrlKey && brackets.platform === "mac")) {
@@ -332,7 +331,7 @@ define(function (require, exports, module) {
         
         // Style the element
         $listItem.css("position", "relative").css("z-index", 3);
-        if (!$listItem.hasClass('selected')) {
+        if (!$listItem.hasClass("selected")) {
             $listItem.css("box-shadow", "none");
         }
         
@@ -349,17 +348,20 @@ define(function (require, exports, module) {
         });
     }
     
-    $('#open-files-container').mousedown(function (e) {
+    $("#open-files-container").mousedown(function (e) {
         // Get the index of list item selected
         var place = $(e.target.parentElement).index();
-        _reorderListItem(e, $(this).find('ul > li:nth-child(' + (place + 1) + ')'), false);
+        _reorderListItem(e, $(this).find("ul > li:nth-child(" + (place + 1) + ")"), false);
         e.preventDefault();
     });
     
     // Register new functions as default; replace keybinding trigger functions
-    CommandManager.register(Strings.CMD_HIDE_SIDEBAR, "toggle-sidebar-tabs", toggleSidebar);
-    KeyBindingManager.removeBinding('Ctrl-Shift-H');
-    KeyBindingManager.addBinding('toggle-sidebar-tabs', 'Ctrl-Shift-H');
+    CommandManager.register("Toggle Sidebar and Tabs", "toggle-sidebar-tabs", toggleSidebar);
+    KeyBindingManager.removeBinding("Ctrl-Shift-H");
+    KeyBindingManager.addBinding("toggle-sidebar-tabs", "Ctrl-Shift-H");
+    
+    var menu = Menus.getMenu(Menus.AppMenuBar.VIEW_MENU);
+    menu.addMenuItem("toggle-sidebar-tabs", "Ctrl-Shift-H", "after", "view.hideSidebar");
     
     // Initiate tabs
     toggleTabs();
