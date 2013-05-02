@@ -86,7 +86,7 @@ define(function (require, exports, module) {
 	 */
     function hideTabs() {
         // Move back into sidebar
-        $("#open-files-container").prependTo("#file-section");
+        $("#open-files-container").insertAfter("#working-set-header");
         // Show selection triangle
         $(".sidebar-selection-triangle").css("display", "block").css("top", $(".sidebar-selection").offset().top);
         // Remove tabs styling of toolbar
