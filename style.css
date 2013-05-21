@@ -80,11 +80,11 @@
     visibility: visible;
     position: fixed;
     width: auto;
-    height: 30px;
+    height: 35px;
     right: 10px;
-    top: 5px;
+    top: 0;
     z-index: 99;
 }
-.content.tabs + #main-toolbar > .buttons > a {
-    min-height: 15px;
+.buttons > a {
+    vertical-align: top;
 }

@@ -77,6 +77,11 @@ define(function (require, exports, module) {
         $(".content").addClass("tabs");
         // Make sure the tabs fit inside the window
         $("#open-files-container").find("ul").bind("DOMSubtreeModified", squeeze);
+        // Center toolbar buttons
+        var $buttons = $(".buttons > a");
+        for (var i = $buttons.length - 1; i >= 0; i--) {
+            $($buttons[i]).css("margin-top", (35 - $($buttons[i]).height()) / 2);
+        };
         $(window).bind("resize", squeeze);
         tabsVisible = true;
     }
@@ -96,6 +101,8 @@ define(function (require, exports, module) {
         $(window).unbind("resize", squeeze);
         // Focus current file again to reset selection metrics
         FileViewController.openAndSelectDocument(DocumentManager.getCurrentDocument().file.fullPath, FileViewController.getFileSelectionFocus());
+        // Remove button margin
+        $(".buttons > a").removeAttr("style");
         // Initiate editor resize for consistency
         EditorManager.resizeEditor();
         tabsVisible = false;
@@ -354,15 +361,11 @@ define(function (require, exports, module) {
         _reorderListItem(e, $(this).find("ul > li:nth-child(" + (place + 1) + ")"), false);
         e.preventDefault();
     });
-    
-    // Register new functions as default; replace keybinding trigger functions
-    CommandManager.register("Toggle Sidebar and Tabs", "toggle-sidebar-tabs", toggleSidebar);
-    KeyBindingManager.removeBinding("Ctrl-Shift-H");
-    KeyBindingManager.addBinding("toggle-sidebar-tabs", "Ctrl-Shift-H");
-    
-    var menu = Menus.getMenu(Menus.AppMenuBar.VIEW_MENU);
-    menu.addMenuItem("toggle-sidebar-tabs", "Ctrl-Shift-H", "after", "view.hideSidebar");
-    
+
+    $("#sidebar").on("panelExpanded panelCollapsed", function () {
+        toggleTabs();
+    })
+
     // Initiate tabs
     toggleTabs();
     
