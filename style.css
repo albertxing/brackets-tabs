@@ -1,6 +1,3 @@
-.content.tabs {
-    right: 0;
-}
 .content > #open-files-container {
     position: fixed;
     top: 0;
@@ -71,20 +68,5 @@
     display: none !important;
 }
 .content.tabs + #main-toolbar {
-    visibility: hidden;
-    border-bottom: none;
-    margin-bottom: 0;
-    width: 0;
-}
-.content.tabs + #main-toolbar > .buttons {
-    visibility: visible;
-    position: fixed;
-    width: auto;
-    height: 35px;
-    right: 10px;
-    top: 0;
-    z-index: 99;
-}
-.buttons > a {
-    vertical-align: top;
+    z-index: 100;
 }
