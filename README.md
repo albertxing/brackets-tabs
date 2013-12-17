@@ -1,6 +1,5 @@
 Tabs for Brackets
 =============
-![Screenshot of the tabs](http://commondatastorage.googleapis.com/htmlvb/2.PNG)
 
 Installation
 ---
@@ -20,3 +19,7 @@ Contributing
 ---
 Feel free to submit a pull request if you find any bugs (to see a list of active issues, visit the [Issues section](https://github.com/albertxing/brackets-tabs/issues)).
 Please make sure all commits are properly documented.
+
+Active Development
+---
+Active development by the author of this extension has ceased. He is busy with college and other projects. However, if this project is important to you, don't hesitate to submit pull requests (see Contributing above). If you are an active contributor, I will consider adding you as a committer to this repository.
